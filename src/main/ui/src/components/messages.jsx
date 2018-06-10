@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import HumanizedTime from './humanized_time';
 import '../styles/messages.css';
+import PropTypes from 'prop-types';
 
 class Messages extends Component {
   renderMessages() {
@@ -39,6 +40,10 @@ class Messages extends Component {
     );
   }
 
+}
+
+Messages.propTypes = {
+  messages: PropTypes.object
 }
 
 function mapStateToProps(state){

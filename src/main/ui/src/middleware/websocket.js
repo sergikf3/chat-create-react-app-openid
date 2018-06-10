@@ -3,6 +3,11 @@ export const WEBSOCKET_MESSAGE = 'WEBSOCKET_MESSAGE';
 export const WEBSOCKET_SEND = 'WEBSOCKET_SEND';
 export const WEBSOCKET_CONNECT_SEND = 'WEBSOCKET_CONNECT_SEND';
 
+export const MESSAGE_RECEIVED = 'MESSAGE_RECEIVED';
+export const CHAT_MESSAGE = 'CHAT_MESSAGE';
+export const USER_JOINED = 'USER_JOINED';
+export const USER_STATS = 'USER_STATS';
+export const USER_LEFT = 'USER_LEFT';
 
 class NullSocket {
   send() {
@@ -20,7 +25,7 @@ function delay(t) {
 const NUM_RETRIES = 3;
 
 async function sendMessageAsync(socket, message) {
-  let i;
+  let i = 0;
   for (i = 0; i < NUM_RETRIES; ++i) {
     try {
       await delay(50);
@@ -36,33 +41,42 @@ async function sendMessageAsync(socket, message) {
   console.log(i);
 }
 
+function messageToActionAdapter(msg) {
+  const eventToActionAdapters = {
+    CHAT_MESSAGE: ({ id, timestamp, payload: { user, message } }) =>
+      ({ type: MESSAGE_RECEIVED, payload: { id, timestamp, user, message } }),
+    USER_STATS: ({ payload }) => ({ type: USER_STATS, payload }),
+    USER_LEFT: ({ payload }) => ({ type: USER_LEFT, payload })
+  };
+  const event = JSON.parse(msg.data);
 
-function factory({ messageToActionAdapter }) {
+  if (eventToActionAdapters[event.type]) {
+    return eventToActionAdapters[event.type](event);
+  }
+}
 
+function factory() {
   let socket = new NullSocket();
 
-  return ({ dispatch }) => {
-    return next => action => {
-
-      switch (action.type) {
-        case WEBSOCKET_CONNECT:
-          socket = new WebSocket(action.payload.url);
-          socket.onmessage = (msg) => {
-            dispatch(messageToActionAdapter(msg) || { type: WEBSOCKET_MESSAGE, payload: msg.data });
-          }
-          break;
-        case WEBSOCKET_SEND:
-          //socket.send(JSON.stringify(action.payload));
-          sendMessageAsync(socket, JSON.stringify(action.payload))
-          break;
-        //case WEBSOCKET_CONNECT_SEND:
-        //  socket = new WebSocket(action.payload.payload.url);
-        //  sendMessageAsync(socket, JSON.stringify(action.payload))
-        //  break;
-        default:
-        // do nothing
+  return function ({ dispatch }) {
+    return function (next) {
+      return function (action) {
+        switch (action.type) {
+          case WEBSOCKET_CONNECT:
+            socket = new WebSocket(action.payload.url);
+            socket.onmessage = (msg) => {
+              const actionMessage = messageToActionAdapter(msg) || { type: WEBSOCKET_MESSAGE, payload: msg.data };
+              dispatch(actionMessage);
+            }
+            break;
+          case WEBSOCKET_SEND:
+            sendMessageAsync(socket, JSON.stringify(action.payload))
+            break;
+          default:
+          // do nothing
+        }
+        return next(action);
       }
-      return next(action);
     }
   }
 }

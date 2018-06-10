@@ -1,4 +1,5 @@
-import { USER_STATS, USER_LEFT, MESSAGE_RECEIVED } from '../actions/chat';
+//import { USER_STATS, USER_LEFT, MESSAGE_RECEIVED } from '../actions/chat';
+import { USER_STATS, MESSAGE_RECEIVED } from '../actions/chat';
 
 
 export default function (state = {}, action) {

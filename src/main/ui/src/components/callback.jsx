@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CallbackComponent } from 'redux-oidc';
 import userManager from '../utils/userManager';
-import { joinChat } from '../actions/chat';
+//import { joinChat } from '../actions/chat';
 import PropTypes from 'prop-types';
-import { processSilentRenew } from 'redux-oidc';
+//import { processSilentRenew } from 'redux-oidc';
 
 const DEFAULT_AVATAR = '//ssl.gstatic.com/accounts/ui/avatar_2x.png';
 
@@ -21,16 +21,13 @@ class CallbackPage extends React.Component {
   }
 
   successCallback = () => {
-    if (this.props.user != null) {
+    if (this.props.user !== null) {
       console.log("signed in", this.props.user.profile.name);
       let alias = this.props.user.profile.name;
       this.updateAvatar(alias);
-      let avatar = this.state.avatar;
-      this.props.joinChat({ alias, avatar });
       this.context.router.history.push('/chat');
     } else {
-        this.handleLogout();
-        //  processSilentRenew();
+      this.handleLogout();
     }
   }
 
@@ -62,4 +59,5 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, { joinChat })(CallbackPage);
+//export default connect(mapStateToProps, { joinChat })(CallbackPage);
+export default connect(mapStateToProps, {})(CallbackPage);

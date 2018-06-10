@@ -3,7 +3,6 @@ export const TICKER_INTERVAL_CREATED = 'TICKER_INTERVAL_CREATED';
 export const TICKER_INTERVAL_REMOVED = 'TICKER_INTERVAL_REMOVED';
 
 export function createTimer() {
-  //const now = new Date();
   return dispatch => {
     const interval = setInterval(() => {
       console.log("minute interval fired");

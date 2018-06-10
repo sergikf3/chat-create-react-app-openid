@@ -1,6 +1,7 @@
 import React from 'react';
-import { sendMessage } from '../actions/chat';
+//import { sendMessage } from '../actions/chat';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class MessageInput extends React.Component {
 
@@ -15,7 +16,7 @@ class MessageInput extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-    this.props.sendMessage(this.props.user, this.state.message);
+    this.props.mapDispatchToProps(this.props.user, this.state.message);
     this.setState({message:''});
     return false;
   }
@@ -40,4 +41,51 @@ class MessageInput extends React.Component {
   }
 }
 
-export default connect(({user}) => ({user}), { sendMessage })(MessageInput);
+MessageInput.propTypes = {
+  user: PropTypes.object,
+  mapStateToProps: PropTypes.func,
+  mapDispatchToProps: PropTypes.func
+}
+/*
+function mapDispatchToProps(user, message) {
+  return dispatch => {
+    dispatch({
+      type: 'WEBSOCKET_SEND',
+      payload: { 
+        type: 'CHAT_MESSAGE', 
+        payload: { user: user, message: message } 
+      }
+    });    
+  }
+}
+*/
+
+function mapDispatchToProps(user, message) {
+  return function (dispatch)  {
+    dispatch({
+      type: 'WEBSOCKET_SEND',
+      payload: { 
+        type: 'CHAT_MESSAGE', 
+        payload: { user: user, message: message } 
+      }
+    });    
+  }
+}
+/*
+function mapState ({user}) {
+  return {user}
+}
+*/
+
+const mapStateToProps1 = ({user}) =>  ({user}) ;
+const mapStateToProps2 = (state) =>  ({user: state.user}) ;
+
+
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  };
+}
+
+//export default connect(({user}) => ({user}), { mapDispatchToProps })(MessageInput);
+export default connect(mapStateToProps2, { mapDispatchToProps })(MessageInput);
