@@ -28,6 +28,10 @@ export default function(ComposedComponent) {
     router: PropTypes.object
   }
 
+  RequireUser.propTypes = {
+    user: PropTypes.object
+  }
+
   function mapStateToProps({user}) {
     return {user};
   }

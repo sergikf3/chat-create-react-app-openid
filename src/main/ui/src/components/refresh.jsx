@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { CallbackComponent } from 'redux-oidc';
 import userManager from '../utils/userManager';
 import configuration from '../utils/configuration';
-//import { joinChatForRefresh } from '../actions/chat';
-//import { connectToChatServer } from '../actions/chat';
 import PropTypes from 'prop-types';
-//import { processSilentRenew } from 'redux-oidc';
+import {
+  USER_JOINED
+} from '../actions/chat';
 
 const DEFAULT_AVATAR = '//ssl.gstatic.com/accounts/ui/avatar_2x.png';
 
@@ -64,16 +64,10 @@ function mapStateToProps(state) {
   };
 }
 
-/*
-mapStateToProps(state) => {
-  user: state.oidc.user;
-}
-*/
-
 function mapDispatchToProps(user, url) {
   return dispatch => {
     dispatch({
-      type: 'USER_JOINED',
+      type: USER_JOINED,
       payload: { user: user, url: url } 
     });
   };

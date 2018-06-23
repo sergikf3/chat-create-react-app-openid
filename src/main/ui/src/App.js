@@ -6,7 +6,6 @@ import TimeTicker from './components/time_ticker';
 import Chat from './components/chat';
 import Login from './components/login';
 import requireUser from './components/require_user';
-//import { connectToChatServer } from './actions/chat';
 import CallbackPage from './components/callback';
 import RefreshPage from './components/refresh';
 import SilentRenewPage from './components/silent_renew';

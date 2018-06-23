@@ -73,11 +73,13 @@ public class ChatSocketHandler implements WebSocketHandler {
 
         public void onComplete() {
 
+        	/*
             lastReceivedEvent.ifPresent(event -> eventPublisher.onNext(
                     Event.type(USER_LEFT)
                             .withPayload()
                             .user(event.getUser())
                             .build()));
+                            */
         }
 
     }

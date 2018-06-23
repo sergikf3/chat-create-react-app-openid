@@ -1,9 +1,11 @@
-//import { WEBSOCKET_CONNECT, WEBSOCKET_SEND } from '../middleware/websocket';
+
+export const WEBSOCKET_CONNECT = 'WEBSOCKET_CONNECT';
+export const WEBSOCKET_MESSAGE = 'WEBSOCKET_MESSAGE';
+export const WEBSOCKET_SEND = 'WEBSOCKET_SEND';
+export const WEBSOCKET_CONNECT_SEND = 'WEBSOCKET_CONNECT_SEND';
 
 export const MESSAGE_RECEIVED = 'MESSAGE_RECEIVED';
 export const CHAT_MESSAGE = 'CHAT_MESSAGE';
 export const USER_JOINED = 'USER_JOINED';
 export const USER_STATS = 'USER_STATS';
 export const USER_LEFT = 'USER_LEFT';
-
-

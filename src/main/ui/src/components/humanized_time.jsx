@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 class HumanizedTime extends Component {
 
@@ -16,6 +17,13 @@ class HumanizedTime extends Component {
     );
   }
 
+}
+
+HumanizedTime.propTypes = {
+  time: PropTypes.object,
+  prefix: PropTypes.object,
+  suffix: PropTypes.object,
+  date: PropTypes.object
 }
 
 export default connect(({time}) => ({time}))(HumanizedTime);

@@ -1,13 +1,8 @@
-export const WEBSOCKET_CONNECT = 'WEBSOCKET_CONNECT';
-export const WEBSOCKET_MESSAGE = 'WEBSOCKET_MESSAGE';
-export const WEBSOCKET_SEND = 'WEBSOCKET_SEND';
-export const WEBSOCKET_CONNECT_SEND = 'WEBSOCKET_CONNECT_SEND';
-
-export const MESSAGE_RECEIVED = 'MESSAGE_RECEIVED';
-export const CHAT_MESSAGE = 'CHAT_MESSAGE';
-export const USER_JOINED = 'USER_JOINED';
-export const USER_STATS = 'USER_STATS';
-export const USER_LEFT = 'USER_LEFT';
+ import {
+  WEBSOCKET_CONNECT, WEBSOCKET_MESSAGE, WEBSOCKET_SEND,
+  USER_LEFT, USER_STATS,
+  CHAT_MESSAGE, MESSAGE_RECEIVED
+} from '../actions/chat';
 
 class NullSocket {
   send() {
@@ -41,20 +36,6 @@ async function sendMessageAsync(socket, message) {
   console.log(i);
 }
 
-function messageToActionAdapter(msg) {
-  const eventToActionAdapters = {
-    CHAT_MESSAGE: ({ id, timestamp, payload: { user, message } }) =>
-      ({ type: MESSAGE_RECEIVED, payload: { id, timestamp, user, message } }),
-    USER_STATS: ({ payload }) => ({ type: USER_STATS, payload }),
-    USER_LEFT: ({ payload }) => ({ type: USER_LEFT, payload })
-  };
-  const event = JSON.parse(msg.data);
-
-  if (eventToActionAdapters[event.type]) {
-    return eventToActionAdapters[event.type](event);
-  }
-}
-
 function factory() {
   let socket = new NullSocket();
 
@@ -65,8 +46,32 @@ function factory() {
           case WEBSOCKET_CONNECT:
             socket = new WebSocket(action.payload.url);
             socket.onmessage = (msg) => {
-              const actionMessage = messageToActionAdapter(msg) || { type: WEBSOCKET_MESSAGE, payload: msg.data };
-              dispatch(actionMessage);
+              const event = JSON.parse(msg.data);
+              switch (event.type) {
+                case CHAT_MESSAGE:
+                  dispatch({
+                    type: MESSAGE_RECEIVED,
+                    payload: { id: event.id, timestamp: event.timestamp, user: event.payload.user, message: event.payload.message }
+                  });
+                  break;
+                case USER_STATS:
+                  dispatch({
+                    type: USER_STATS,
+                    payload: event.payload
+                  });
+                  break;
+                case USER_LEFT:
+                  dispatch({
+                    type: USER_LEFT,
+                    payload: event.payload
+                  });
+                  break;
+                default:
+                  dispatch({
+                    type: WEBSOCKET_MESSAGE,
+                    payload: msg.data
+                  });
+              }
             }
             break;
           case WEBSOCKET_SEND:

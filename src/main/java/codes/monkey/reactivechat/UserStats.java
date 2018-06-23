@@ -14,8 +14,6 @@ import static codes.monkey.reactivechat.Event.Type.*;
 import static java.util.Arrays.asList;
 
 public class UserStats {
-
-
     UnicastProcessor eventPublisher;
     Map<String, Stats> userStatsMap = new ConcurrentHashMap();
 
@@ -39,8 +37,9 @@ public class UserStats {
                         .property("stats", new HashMap<>(userStatsMap))
                         .build()
                 )
-                
+              
                 .subscribe(eventPublisher::onNext);
+  
     }
 
     private static Predicate<Event> type(Type... types){
@@ -50,6 +49,7 @@ public class UserStats {
     private void onChatMessage(Event event) {
         String alias = event.getUser().getAlias();
         Stats stats = userStatsMap.computeIfAbsent(alias, s -> new Stats(event.getUser()));
+        //Stats stats = userStatsMap.computeIfPresent(alias, new Stats(event.getUser()));
         stats.onChatMessage(event);
     }
 

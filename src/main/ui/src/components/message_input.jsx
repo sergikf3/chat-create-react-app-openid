@@ -1,5 +1,5 @@
 import React from 'react';
-//import { sendMessage } from '../actions/chat';
+import { WEBSOCKET_SEND, CHAT_MESSAGE } from '../actions/chat';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -46,46 +46,29 @@ MessageInput.propTypes = {
   mapStateToProps: PropTypes.func,
   mapDispatchToProps: PropTypes.func
 }
-/*
-function mapDispatchToProps(user, message) {
-  return dispatch => {
-    dispatch({
-      type: 'WEBSOCKET_SEND',
-      payload: { 
-        type: 'CHAT_MESSAGE', 
-        payload: { user: user, message: message } 
-      }
-    });    
-  }
-}
-*/
 
 function mapDispatchToProps(user, message) {
   return function (dispatch)  {
     dispatch({
-      type: 'WEBSOCKET_SEND',
+      type: WEBSOCKET_SEND,
       payload: { 
-        type: 'CHAT_MESSAGE', 
+        type: CHAT_MESSAGE, 
         payload: { user: user, message: message } 
       }
     });    
   }
 }
-/*
-function mapState ({user}) {
-  return {user}
-}
-*/
 
-const mapStateToProps1 = ({user}) =>  ({user}) ;
+//const mapStateToProps1 = ({user}) =>  ({user}) ;
 const mapStateToProps2 = (state) =>  ({user: state.user}) ;
 
-
+/*
 function mapStateToProps(state) {
   return {
     user: state.user,
   };
 }
+*/
 
 //export default connect(({user}) => ({user}), { mapDispatchToProps })(MessageInput);
 export default connect(mapStateToProps2, { mapDispatchToProps })(MessageInput);

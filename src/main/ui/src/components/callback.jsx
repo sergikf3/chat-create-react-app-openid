@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CallbackComponent } from 'redux-oidc';
 import userManager from '../utils/userManager';
-//import { joinChat } from '../actions/chat';
 import PropTypes from 'prop-types';
-//import { processSilentRenew } from 'redux-oidc';
 
 const DEFAULT_AVATAR = '//ssl.gstatic.com/accounts/ui/avatar_2x.png';
 
@@ -49,7 +47,6 @@ CallbackPage.contextTypes = {
 
 CallbackPage.propTypes = {
   user: PropTypes.object,
-  joinChat: PropTypes.func
 }
 
 function mapStateToProps(state) {
