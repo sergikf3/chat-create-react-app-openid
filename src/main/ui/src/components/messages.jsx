@@ -5,7 +5,10 @@ import '../styles/messages.css';
 import PropTypes from 'prop-types';
 
 class Messages extends Component {
+  
   renderMessages() {
+ //   const vstats = this.props.stats;
+    
     return this.props.messages.map(message => {
       return (
         <div key={message.id} className="list-group-item">
@@ -20,7 +23,8 @@ class Messages extends Component {
                 </div>
                 <div className="col-md-8 text-left">{message.message}</div>
                 <div className="col-md-2 text-right text-info">
-                  <small><HumanizedTime date={message.timestamp}/></small>
+                  <small><HumanizedTime date={message.timestamp}/><span>
+                      {message.timestamp - message.delta > 0 ? '(new)' : '(stale)'}</span></small>
                 </div>
               </div>
             </div>
@@ -43,11 +47,12 @@ class Messages extends Component {
 }
 
 Messages.propTypes = {
-  messages: PropTypes.object
+  messages: PropTypes.object,
+  stats: PropTypes.object
 }
 
 function mapStateToProps(state){
-  return {messages: state.messages};
+  return {messages: state.messages, stats: state.stats};
 }
 
 export default connect(mapStateToProps)(Messages);

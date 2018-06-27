@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Event {
     public enum Type {
-        CHAT_MESSAGE, USER_JOINED, USER_STATS, USER_LEFT;
+        CHAT_MESSAGE, USER_JOINED, USER_STATS, USER_LEFT, USER_JOINED_BACKEND;
     }
 
 
@@ -22,6 +22,8 @@ public class Event {
     private Payload payload;
 
     private final long timestamp;
+    
+    private static long delta;
 
 
 
@@ -55,6 +57,14 @@ public class Event {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public long getDelta() {
+        return delta;
+    }
+
+    public void setDelta(long delta) {
+        Event.delta = delta;
     }
 
     public static EventBuilder type(Type type) {

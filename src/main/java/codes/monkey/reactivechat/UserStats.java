@@ -6,6 +6,7 @@ import reactor.core.publisher.UnicastProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -13,8 +14,10 @@ import java.util.function.Predicate;
 import static codes.monkey.reactivechat.Event.Type.*;
 import static java.util.Arrays.asList;
 
+import java.util.Date;
+
 public class UserStats {
-    UnicastProcessor eventPublisher;
+    UnicastProcessor<Event> eventPublisher;
     Map<String, Stats> userStatsMap = new ConcurrentHashMap();
 
     public UserStats(Flux<Event> events, UnicastProcessor eventPublisher) {
@@ -27,10 +30,9 @@ public class UserStats {
                 .map(Event::getUser)
                 .map(User::getAlias)
                 .subscribe(userStatsMap::remove);
-
+        
         events
-                .filter(type(USER_JOINED))
-               
+        .filter(type(USER_JOINED))
                 .map(event -> Event.type(USER_STATS)
                         .withPayload()
                         .systemUser()
@@ -38,8 +40,8 @@ public class UserStats {
                         .build()
                 )
               
-                .subscribe(eventPublisher::onNext);
-  
+        .subscribe(eventPublisher::onNext);
+
     }
 
     private static Predicate<Event> type(Type... types){
@@ -49,7 +51,6 @@ public class UserStats {
     private void onChatMessage(Event event) {
         String alias = event.getUser().getAlias();
         Stats stats = userStatsMap.computeIfAbsent(alias, s -> new Stats(event.getUser()));
-        //Stats stats = userStatsMap.computeIfPresent(alias, new Stats(event.getUser()));
         stats.onChatMessage(event);
     }
 

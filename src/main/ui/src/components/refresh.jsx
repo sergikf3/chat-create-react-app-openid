@@ -65,12 +65,12 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(user, url) {
-  return dispatch => {
+  return function (dispatch)  {
     dispatch({
       type: USER_JOINED,
       payload: { user: user, url: url } 
-    });
-  };
+    });  
+  }
 }
 
 export default connect(mapStateToProps, { mapDispatchToProps })(RefreshPage);

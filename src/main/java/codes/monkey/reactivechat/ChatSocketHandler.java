@@ -2,6 +2,9 @@ package codes.monkey.reactivechat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import codes.monkey.reactivechat.Event.Type;
+
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -10,7 +13,10 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.UnicastProcessor;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static codes.monkey.reactivechat.Event.Type.USER_LEFT;
 
@@ -19,6 +25,8 @@ public class ChatSocketHandler implements WebSocketHandler {
     private UnicastProcessor<Event> eventPublisher;
     private Flux<String> outputEvents;
     private ObjectMapper mapper;
+    private static Map<String, Long> userLoginTime = new ConcurrentHashMap();
+
 
     public ChatSocketHandler(UnicastProcessor<Event> eventPublisher, Flux<Event> events) {
         this.eventPublisher = eventPublisher;
@@ -39,7 +47,18 @@ public class ChatSocketHandler implements WebSocketHandler {
 
     private Event toEvent(String json) {
         try {
-            return mapper.readValue(json, Event.class);
+        	Event ev = mapper.readValue(json, Event.class);
+        	if(ev.getType() == Type.USER_JOINED_BACKEND) {
+        		String alias = ev.getUser().getAlias();
+        		userLoginTime.put(alias, Long.valueOf(System.currentTimeMillis()));
+        	}
+        	if(ev.getType() == Type.CHAT_MESSAGE) {
+        		String alias = ev.getUser().getAlias();
+        		Long loginTime = userLoginTime.get(alias);
+        		Long delta = loginTime == null ? 0 : loginTime;
+        		ev.setDelta(delta);
+        	}
+            return ev;
         } catch (IOException e) {
             throw new RuntimeException("Invalid JSON:" + json, e);
         }
