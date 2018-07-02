@@ -1,7 +1,7 @@
- import {
+import {
   WEBSOCKET_CONNECT, WEBSOCKET_MESSAGE, WEBSOCKET_SEND,
   USER_LEFT, USER_STATS,
-  CHAT_MESSAGE, MESSAGE_RECEIVED
+  CHAT_MESSAGE, MESSAGE_RECEIVED, USER_JOINED_BACKEND
 } from '../actions/chat';
 
 class NullSocket {
@@ -51,7 +51,10 @@ function factory() {
                 case CHAT_MESSAGE:
                   dispatch({
                     type: MESSAGE_RECEIVED,
-                    payload: { id: event.id, timestamp: event.timestamp, user: event.payload.user, message: event.payload.message }
+                    payload: {
+                      id: event.id, timestamp: event.timestamp, delta: event.delta,
+                      user: event.payload.user, message: event.payload.message
+                    }
                   });
                   break;
                 case USER_STATS:
@@ -64,6 +67,12 @@ function factory() {
                   dispatch({
                     type: USER_LEFT,
                     payload: event.payload
+                  });
+                  break;
+                case USER_JOINED_BACKEND:
+                  dispatch({
+                    type: USER_JOINED_BACKEND,
+                    payload: {user: event.payload.user, url: event.payload.url, delta: event.timestamp }
                   });
                   break;
                 default:

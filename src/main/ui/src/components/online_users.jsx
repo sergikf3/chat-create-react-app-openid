@@ -6,7 +6,7 @@ import HumanizedTime from './humanized_time';
 class OnlineUsers extends React.Component {
 
   renderUsers() {
-    return Object.values(this.props.stats).map(userStats =>{
+    return Object.values(this.props.stats).map(userStats => {
       return (
         <li className="media" key={userStats.user.alias}>
           <div className="media-left"><img alt="" className="media-object" src={userStats.user.avatar} /></div>
@@ -18,7 +18,10 @@ class OnlineUsers extends React.Component {
             </div>
             <div className="row">
               <div className="col-md-12">
-                <small className="text-info"><HumanizedTime prefix="last seen" suffix="ago" date={userStats.lastMessage}/></small>
+                <small className="text-info"><HumanizedTime prefix="last seen" suffix="ago" date={userStats.lastMessage} /></small>
+              </div>
+              <div className="col-md-12">
+                <small className="text-info"><HumanizedTime prefix="login time" suffix="ago" date={userStats.delta} /></small>
               </div>
             </div>
           </div>
@@ -38,4 +41,4 @@ class OnlineUsers extends React.Component {
   }
 }
 
-export default connect(({stats}) => ({stats}))(OnlineUsers);
+export default connect(({ stats }) => ({ stats }))(OnlineUsers);

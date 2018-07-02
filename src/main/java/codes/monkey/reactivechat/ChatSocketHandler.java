@@ -55,7 +55,7 @@ public class ChatSocketHandler implements WebSocketHandler {
         	if(ev.getType() == Type.CHAT_MESSAGE) {
         		String alias = ev.getUser().getAlias();
         		Long loginTime = userLoginTime.get(alias);
-        		Long delta = loginTime == null ? 0 : loginTime;
+        		Long delta = (loginTime == null) ? ev.getTimestamp() : loginTime;
         		ev.setDelta(delta);
         	}
             return ev;

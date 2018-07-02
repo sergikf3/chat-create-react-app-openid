@@ -4,7 +4,7 @@ import { CallbackComponent } from 'redux-oidc';
 import userManager from '../utils/userManager';
 import PropTypes from 'prop-types';
 import {
-  USER_JOINED, WEBSOCKET_SEND
+  USER_JOINED, WEBSOCKET_SEND, USER_JOINED_BACKEND
 } from '../actions/chat';
 
 const DEFAULT_AVATAR = '//ssl.gstatic.com/accounts/ui/avatar_2x.png';
@@ -59,17 +59,6 @@ function mapStateToProps(state) {
   };
 }
 
-/*
-function mapDispatchToProps(user, url) {
-  return dispatch => {
-    dispatch({
-      type: USER_JOINED,
-      payload: { user: user, url: url } 
-    });
-  };
-}
-*/
-
 function mapDispatchToProps(user, url) {
   return function (dispatch)  {
     dispatch({
@@ -79,7 +68,7 @@ function mapDispatchToProps(user, url) {
     dispatch({
       type: WEBSOCKET_SEND,
       payload: { 
-        type: 'USER_JOINED_BACKEND',
+        type: USER_JOINED_BACKEND,
         payload: { user: user, url: url } 
         }
     });    
