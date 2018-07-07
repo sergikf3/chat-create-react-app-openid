@@ -52,7 +52,7 @@ function factory() {
                   dispatch({
                     type: MESSAGE_RECEIVED,
                     payload: {
-                      id: event.id, timestamp: event.timestamp, delta: event.delta,
+                      id: event.id, timestamp: event.timestamp, 
                       user: event.payload.user, message: event.payload.message
                     }
                   });
@@ -72,7 +72,7 @@ function factory() {
                 case USER_JOINED_BACKEND:
                   dispatch({
                     type: USER_JOINED_BACKEND,
-                    payload: {user: event.payload.user, url: event.payload.url, delta: event.timestamp }
+                    payload: {user: event.payload.user, url: event.payload.url, loginTime: event.timestamp }
                   });
                   break;
                 default:

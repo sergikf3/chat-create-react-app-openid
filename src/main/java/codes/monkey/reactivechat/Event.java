@@ -23,9 +23,6 @@ public class Event {
 
     private final long timestamp;
     
-    private static long delta;
-
-
 
     @JsonCreator
     public Event(@JsonProperty("type") Type type,
@@ -57,14 +54,6 @@ public class Event {
 
     public long getTimestamp() {
         return timestamp;
-    }
-
-    public long getDelta() {
-        return delta;
-    }
-
-    public void setDelta(long delta) {
-        Event.delta = delta;
     }
 
     public static EventBuilder type(Type type) {

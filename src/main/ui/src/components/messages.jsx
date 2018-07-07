@@ -8,7 +8,19 @@ class Messages extends Component {
 
   renderMessages() {
     return this.props.messages.map(message => {
-      const delta_val = (this.props.stats[message.user.alias]) ? this.props.stats[message.user.alias].delta : message.timestamp;
+      const vloginTime = (this.props.stats[message.user.alias]) ? this.props.stats[message.user.alias].loginTime : message.timestamp;
+      const isNew = message.timestamp > vloginTime;
+
+      const staleTimestamp =
+          <div className="col-md-2 text-right text-info">
+          <small> <HumanizedTime date={message.timestamp} /> </small>
+        </div>
+
+      const newTimestamp =
+      <div className="col-md-2 text-right ">
+          <small>  <HumanizedTime date={message.timestamp} /> </small>
+        </div>
+ 
       return (
         <div key={message.id} className="list-group-item">
           <div className="media">
@@ -21,10 +33,7 @@ class Messages extends Component {
                   {message.user.alias}
                 </div>
                 <div className="col-md-8 text-left">{message.message}</div>
-                <div className="col-md-2 text-right text-info">
-                  <small><HumanizedTime date={message.timestamp} /><span>
-                    {message.timestamp - delta_val > 0 ? '(new)' : '(stale)'}</span></small>
-                </div>
+                {isNew ? newTimestamp : staleTimestamp}
               </div>
             </div>
           </div>
@@ -32,10 +41,6 @@ class Messages extends Component {
       );
     });
   }
-  /*
-                    <small><HumanizedTime date={message.timestamp}/><span>
-                       {message.timestamp - message.delta > 0 ? '(new)' : '(stale)'}</span></small>
- */
 
   render() {
     return (

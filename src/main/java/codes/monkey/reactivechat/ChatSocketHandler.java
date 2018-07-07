@@ -25,8 +25,6 @@ public class ChatSocketHandler implements WebSocketHandler {
     private UnicastProcessor<Event> eventPublisher;
     private Flux<String> outputEvents;
     private ObjectMapper mapper;
-    private static Map<String, Long> userLoginTime = new ConcurrentHashMap();
-
 
     public ChatSocketHandler(UnicastProcessor<Event> eventPublisher, Flux<Event> events) {
         this.eventPublisher = eventPublisher;
@@ -50,13 +48,6 @@ public class ChatSocketHandler implements WebSocketHandler {
         	Event ev = mapper.readValue(json, Event.class);
         	if(ev.getType() == Type.USER_JOINED_BACKEND) {
         		String alias = ev.getUser().getAlias();
-        		userLoginTime.put(alias, Long.valueOf(System.currentTimeMillis()));
-        	}
-        	if(ev.getType() == Type.CHAT_MESSAGE) {
-        		String alias = ev.getUser().getAlias();
-        		Long loginTime = userLoginTime.get(alias);
-        		Long delta = (loginTime == null) ? ev.getTimestamp() : loginTime;
-        		ev.setDelta(delta);
         	}
             return ev;
         } catch (IOException e) {

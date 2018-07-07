@@ -5,7 +5,6 @@ export default function (state = {}, action) {
     case USER_STATS:
       return { ...action.payload.stats };
     case USER_LEFT:
-      //const oldMessageCount = state[action.payload.user.alias].messageCount
       return Object.values(state)
         .filter(
           stat => stat.user.alias !== action.payload.user.alias
@@ -16,23 +15,22 @@ export default function (state = {}, action) {
           },
           {});
     case MESSAGE_RECEIVED:
-      //const { payload: { user: { alias }, timestamp, delta }, payload: { user } } = action;
+      //const { payload: { user: { alias }, timestamp, loginTime }, payload: { user } } = action;
       {
         const user = action.payload.user;
         const alias = user.alias;
         const timestamp = action.payload.timestamp;
-        //const delta = action.payload.delta;
-        const delta = state[alias] ? state[alias].delta : action.payload.delta;
+         const loginTime = state[alias] ? state[alias].loginTime : action.payload.timestamp;
+        //const loginTime = state[alias].loginTime;
         const messageCount = state[alias] ? state[alias].messageCount + 1 : 1;
-        return { ...state, [alias]: { user: user, lastMessage: timestamp, messageCount: messageCount, delta: delta } }
+        return { ...state, [alias]: { user: user, lastMessage: timestamp, messageCount: messageCount, loginTime: loginTime } }
       }
     case USER_JOINED_BACKEND:
       {
         const user = action.payload.user;
         const alias = user.alias;
-        const delta = state[alias] ? state[alias].delta : action.payload.delta;
-        const messageCount = 0;
-        return { ...state, [alias]: { user: user, lastMessage: delta, messageCount: messageCount, delta: delta } }
+        const loginTime = state[alias] ? state[alias].loginTime : action.payload.loginTime;
+        return { ...state, [alias]: { user: user, lastMessage: loginTime, messageCount: 0, loginTime: loginTime } }
       }     
     default: return state;
   }

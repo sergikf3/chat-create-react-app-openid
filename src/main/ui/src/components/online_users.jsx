@@ -21,7 +21,7 @@ class OnlineUsers extends React.Component {
                 <small className="text-info"><HumanizedTime prefix="last seen" suffix="ago" date={userStats.lastMessage} /></small>
               </div>
               <div className="col-md-12">
-                <small className="text-info"><HumanizedTime prefix="login time" suffix="ago" date={userStats.delta} /></small>
+                <small className="text-info"><HumanizedTime prefix="login time" suffix="ago" date={userStats.loginTime} /></small>
               </div>
             </div>
           </div>
