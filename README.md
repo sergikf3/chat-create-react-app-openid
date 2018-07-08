@@ -6,7 +6,7 @@ Modified WebFlux Chat Application sample code accompanying [How To Build a Chat 
 
 ## Creation of the project baseline using create-react-app:
 
-Make sure that create-tact-app is globally installed:
+Make sure that create-react-app is globally installed:
 
 ```
 npm install -g create-react-app
