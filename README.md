@@ -27,3 +27,4 @@ npm install --save node-sass-chokidar
 
 npm install
 ```
+Complete creation of the application services and components
