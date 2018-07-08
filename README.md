@@ -24,6 +24,9 @@ npm install -save oidc-client@1.3.0
 npm install -save redux-oidc@3.0.0-beta.12
 npm install -save babel-polyfill
 npm install --save node-sass-chokidar
+npm install --save moment
+npm install --save npm-run-all
+npm install --save prop-types
 
 npm install
 ```
