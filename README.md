@@ -198,5 +198,131 @@ Create the ./.env.development file
 PORT=8888
  ```
  
+Populate the src/App.js file as follows:
+
+ ```
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+import TimeTicker from './components/time_ticker';
+import Chat from './components/chat';
+import Login from './components/login';
+import requireUser from './components/require_user';
+import CallbackPage from './components/callback';
+import RefreshPage from './components/refresh';
+import SilentRenewPage from './components/silent_renew';
+import PropTypes from 'prop-types';
+
+export function connectToChatServer(url) {
+  return dispatch => {
+    dispatch({ 
+      type: 'WEBSOCKET_CONNECT', 
+      payload: { url: url } });
+  }
+}
+
+class App extends Component {
+
+  componentDidMount() {
+    this.props.connectToChatServer(`ws://${window.location.host}/websocket/chat`);
+  }
+
+  render() {
+    return (
+      <Router >
+        <div className="full-height">
+          <TimeTicker />
+          <Route exact path="/" component={Login} />
+          <Route exact path="/chat" component={requireUser(Chat)} />
+          <Route exact path="/callback" component={CallbackPage} />
+          <Route exact path="/refresh" component={RefreshPage} />
+          <Route exact path="/silent_renew" component={SilentRenewPage} />
+        </div>
+      </Router>
+    );
+  }
+}
+
+App.propTypes = {
+  connectToChatServer: PropTypes.func
+}
+
+export default connect(null, { connectToChatServer })(App);
+ ```
  
+Populate the src/index.js file as follows:
+
+ ```
+ import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import store, { history } from './store'
+import App from './App'
+import { OidcProvider } from 'redux-oidc';
+import userManager from './utils/userManager';
+
+import registerServiceWorker from './registerServiceWorker';
+
+const target = document.querySelector('#root')
+
+render(
+    <Provider store={store}>
+        <OidcProvider store={store} userManager={userManager}>
+            <ConnectedRouter history={history}>
+                <div>
+                    <App />
+                </div>
+            </ConnectedRouter>
+        </OidcProvider>
+    </Provider>,
+    target
+)
+
+registerServiceWorker();
+
+```
+
+Create the file src/store.jsx as follows:
+
+```
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
+import websocket from './middleware/websocket';
+import reducers from './reducers';
+import { routerMiddleware } from 'react-router-redux';
+
+import { loadUser } from 'redux-oidc';
+import userManager from './utils/userManager';
+
+import createHistory from 'history/createBrowserHistory'
+
+export const history = createHistory()
+
+
+const initialState = {};
+const appliedMiddleware = applyMiddleware(reduxThunk, routerMiddleware(history), websocket());
+const createStoreWithMiddleware = appliedMiddleware(createStore);
+const store = createStoreWithMiddleware(reducers, initialState);
+
+// load the current user into the redux store
+loadUser(store, userManager);
+
+export default store;
+```
+
+Check-out from current repository and copy content of the following directories to new repository under src directory:
+
+```
+actions
+components
+middleware 
+reducers
+styles
+utils
+```
+
+Build and start the frontend using the npm start-js command. Start the backend and make sure the chat works OK.
+
 
