@@ -46,9 +46,11 @@ public class ChatSocketHandler implements WebSocketHandler {
     private Event toEvent(String json) {
         try {
         	Event ev = mapper.readValue(json, Event.class);
+        	/*
         	if(ev.getType() == Type.USER_JOINED_BACKEND) {
         		String alias = ev.getUser().getAlias();
         	}
+        	*/
             return ev;
         } catch (IOException e) {
             throw new RuntimeException("Invalid JSON:" + json, e);
@@ -65,14 +67,14 @@ public class ChatSocketHandler implements WebSocketHandler {
 
     private static class WebSocketMessageSubscriber {
         private UnicastProcessor<Event> eventPublisher;
-        private Optional<Event> lastReceivedEvent = Optional.empty();
+        //private Optional<Event> lastReceivedEvent = Optional.empty();
 
         public WebSocketMessageSubscriber(UnicastProcessor<Event> eventPublisher) {
             this.eventPublisher = eventPublisher;
         }
 
         public void onNext(Event event) {
-            lastReceivedEvent = Optional.of(event);
+            //lastReceivedEvent = Optional.of(event);
             eventPublisher.onNext(event);
         }
 

@@ -39,7 +39,7 @@ public class ReactiveChatApplication {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> routes(){
+    public RouterFunction<ServerResponse> routes1(){
         return RouterFunctions.route(
                 GET("/").or(GET("/callback")).or(GET("/silent_renew")).or(GET("/chat")).or(GET("/refresh")),
                 request -> ServerResponse.ok().body(BodyInserters.fromResource(new ClassPathResource("public/index.html")))
@@ -47,7 +47,7 @@ public class ReactiveChatApplication {
     }
 
     @Bean
-    public HandlerMapping webSocketMapping(UnicastProcessor<Event> eventPublisher, Flux<Event> events) {
+    public HandlerMapping webSocketMapping1(UnicastProcessor<Event> eventPublisher, Flux<Event> events) {
         Map<String, Object> map = new HashMap<>();
         map.put("/websocket/chat", new ChatSocketHandler(eventPublisher, events));
         SimpleUrlHandlerMapping simpleUrlHandlerMapping = new SimpleUrlHandlerMapping();
@@ -64,7 +64,7 @@ public class ReactiveChatApplication {
     }
 
     @Bean
-    public UserStats userStats(Flux<Event> events, UnicastProcessor eventPublisher){
+    public UserStats userStats1(Flux<Event> events, UnicastProcessor<Event> eventPublisher){
         return new UserStats(events, eventPublisher);
     }
 }

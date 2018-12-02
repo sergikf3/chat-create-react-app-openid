@@ -18,9 +18,9 @@ import java.util.Date;
 
 public class UserStats {
     UnicastProcessor<Event> eventPublisher;
-    Map<String, Stats> userStatsMap = new ConcurrentHashMap();
+    Map<String, Stats> userStatsMap = new ConcurrentHashMap<String, Stats>();
 
-    public UserStats(Flux<Event> events, UnicastProcessor eventPublisher) {
+    public UserStats(Flux<Event> events, UnicastProcessor<Event> eventPublisher) {
         this.eventPublisher = eventPublisher;
         events
                 .filter(type(CHAT_MESSAGE, USER_JOINED))
